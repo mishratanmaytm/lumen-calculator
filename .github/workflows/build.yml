@@ -1,0 +1,51 @@
+name: Build Android APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths-ignore:
+      - "docs/**"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    steps:
+      - name: Get the code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install system packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf automake libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev build-essential
+
+      - name: Install Buildozer
+        run: pip install --upgrade pip buildozer "cython==0.29.37" setuptools virtualenv
+
+      - name: Build the APK
+        run: buildozer -v android debug
+
+      - name: Keep a copy of the APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Lumen-apk
+          path: bin/*.apk
+
+      - name: Put the APK on the website
+        run: |
+          mkdir -p docs
+          cp bin/*.apk docs/Lumen.apk
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          git add docs/Lumen.apk
+          git commit -m "Update Lumen.apk" || echo "Nothing new to save"
+          git push
