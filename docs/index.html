@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lumen – a calculator that feels good</title>
+<meta name="description" content="Lumen is a free, ad-free scientific calculator for Android with dark and light themes, history and custom colours.">
+<meta name="theme-color" content="#0B1020">
+<link rel="icon" href="icon.png">
+<style>
+  :root {
+    --accent: #8B5CF6;
+    --bg: #0B1020; --panel: #111833; --key: #1A2240; --text: #EEF1FF; --dim: #8C96B8;
+    --line: rgba(255,255,255,.08);
+  }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #E9E5DE; --panel: #F4F1EB; --key: #FBF9F5; --text: #23252E; --dim: #6E6A5E;
+            --line: rgba(0,0,0,.09); }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font-family: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+         line-height: 1.55; transition: background .3s, color .3s; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 0 22px; }
+  header { display: flex; align-items: center; gap: 12px; padding: 22px 0; }
+  header img { width: 38px; height: 38px; border-radius: 10px; }
+  header b { letter-spacing: .18em; font-size: 15px; }
+  .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding: 28px 0 56px; }
+  h1 { font-size: clamp(34px, 6vw, 58px); line-height: 1.05; margin: 0 0 16px; letter-spacing: -.02em; }
+  h1 span { color: var(--accent); }
+  .lead { color: var(--dim); font-size: 18px; max-width: 30em; margin: 0 0 26px; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; background: var(--accent); color: #fff;
+         text-decoration: none; font-weight: 700; padding: 15px 26px; border-radius: 16px; font-size: 17px;
+         box-shadow: 0 10px 30px -8px var(--accent); transition: transform .15s, box-shadow .15s; }
+  .btn:hover { transform: translateY(-2px); }
+  .btn:active { transform: scale(.97); }
+  .note { color: var(--dim); font-size: 14px; margin-top: 14px; }
+  .dots { display: flex; gap: 10px; margin-top: 26px; align-items: center; color: var(--dim); font-size: 14px; }
+  .dots button { width: 26px; height: 26px; border-radius: 50%; border: 2px solid transparent; cursor: pointer; padding: 0; }
+  .dots button.on { border-color: var(--text); }
+  .phone { justify-self: center; width: 270px; background: var(--panel); border: 1px solid var(--line);
+           border-radius: 38px; padding: 16px; box-shadow: 0 40px 80px -30px rgba(0,0,0,.55); }
+  .screen { background: var(--bg); border-radius: 22px; padding: 14px 16px 12px; text-align: right; }
+  .screen small { color: var(--dim); font-size: 13px; display: block; }
+  .screen .ex { font-size: 22px; color: var(--dim); }
+  .screen .big { font-size: 56px; font-weight: 700; color: var(--accent); line-height: 1.1; }
+  .keys { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 12px; }
+  .keys i { font-style: normal; display: grid; place-items: center; height: 40px; border-radius: 13px;
+            background: var(--key); font-size: 16px; }
+  .keys i.op { color: var(--accent); background: color-mix(in srgb, var(--key) 80%, var(--accent)); }
+  .keys i.eq { background: var(--accent); color: #fff; font-weight: 700; }
+  .keys i.cl { color: #FF8FA3; }
+  section { padding: 36px 0; }
+  h2 { font-size: 28px; margin: 0 0 18px; letter-spacing: -.01em; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 14px; }
+  .card { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; padding: 20px; }
+  .card h3 { margin: 0 0 6px; font-size: 17px; }
+  .card p { margin: 0; color: var(--dim); font-size: 15px; }
+  ol { padding-left: 20px; } ol li { margin-bottom: 10px; }
+  details { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px 18px; margin-bottom: 10px; }
+  summary { cursor: pointer; font-weight: 600; }
+  details p { color: var(--dim); margin: 10px 0 0; }
+  footer { color: var(--dim); font-size: 14px; padding: 30px 0 50px; border-top: 1px solid var(--line); margin-top: 30px; }
+  @media (max-width: 760px) { .hero { grid-template-columns: 1fr; text-align: left; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } html { scroll-behavior: auto; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header><img src="icon.png" alt="Lumen icon"><b>LUMEN</b></header>
+
+  <div class="hero">
+    <div>
+      <h1>A calculator that <span>feels good</span> to use.</h1>
+      <p class="lead">Lumen is a free scientific calculator for Android. Big readable answers, two hand-designed themes and your own accent colour. No ads, no sign-up, works offline.</p>
+      <a class="btn" href="Lumen.apk" download>&#11015; Download for Android</a>
+      <p class="note">Free &middot; Android only for now &middot; <a href="#install" style="color:var(--accent)">How to install</a></p>
+      <div class="dots" id="dots"><span>Try a colour:</span></div>
+    </div>
+    <div class="phone" aria-hidden="true">
+      <div class="screen"><small>9 &times; 8 + 6</small><div class="ex">9 &times; 8 + 6 =</div><div class="big">78</div></div>
+      <div class="keys" id="keys"></div>
+    </div>
+  </div>
+
+  <section>
+    <h2>What's inside</h2>
+    <div class="grid">
+      <div class="card"><h3>Standard + Scientific</h3><p>Switch with one tap. Scientific functions live in a neat drawer, so keys never get tiny.</p></div>
+      <div class="card"><h3>DEG &amp; RAD</h3><p>sin, cos, tan and their inverses follow the angle mode you choose.</p></div>
+      <div class="card"><h3>Two themes</h3><p>Midnight (dark) and Paper (light), each designed on its own.</p></div>
+      <div class="card"><h3>Your colour</h3><p>Six presets plus a slider to make any accent colour you like.</p></div>
+      <div class="card"><h3>History</h3><p>Every calculation is saved on your phone. Tap one to use it again.</p></div>
+      <div class="card"><h3>Safe maths</h3><p>Correct order of operations, brackets, and friendly errors instead of crashes.</p></div>
+    </div>
+  </section>
+
+  <section id="install">
+    <h2>Install in 1 minute</h2>
+    <ol>
+      <li>Open this page on your Android phone and tap <b>Download for Android</b>.</li>
+      <li>When it finishes, tap the file <b>Lumen.apk</b>.</li>
+      <li>If Android asks, allow your browser to <b>install unknown apps</b>. You can switch it off again afterwards.</li>
+      <li>Tap <b>Install</b>, then <b>Open</b>. Enjoy!</li>
+    </ol>
+    <details><summary>Google Play Protect shows a warning. Is that normal?</summary>
+      <p>Yes. Lumen isn't on the Play Store yet, so Android shows a caution for any app installed from a website. Only install apps from sources you trust.</p></details>
+    <details><summary>Does Lumen collect my data?</summary>
+      <p>No. It asks for no permissions and has no internet features. History and settings stay on your phone.</p></details>
+    <details><summary>What about iPhone?</summary>
+      <p>Not yet. Apple apps can only be installed through the App Store, so that comes later.</p></details>
+  </section>
+
+  <footer>Made with Python &amp; Kivy by Tanmay. &copy; 2026</footer>
+</div>
+<script>
+(function () {
+  try {
+    var rows = [["AC","cl"],["(",""],[")",""],["\u00F7","op"],["7",""],["8",""],["9",""],["\u00D7","op"],
+                ["4",""],["5",""],["6",""],["\u2013","op"],["1",""],["2",""],["3",""],["+","op"],
+                ["0",""],[".",""],["DEL","cl"],["=","eq"]];
+    var keys = document.getElementById("keys");
+    rows.forEach(function (k) {
+      var el = document.createElement("i"); el.textContent = k[0]; if (k[1]) el.className = k[1]; keys.appendChild(el);
+    });
+    var colours = ["#3D7BFF","#8B5CF6","#10B981","#FF6B5E","#F5A524","#22D3EE"];
+    var holder = document.getElementById("dots");
+    colours.forEach(function (c) {
+      var b = document.createElement("button"); b.style.background = c; b.setAttribute("aria-label", "Accent " + c);
+      if (c === "#8B5CF6") b.className = "on";
+      b.onclick = function () {
+        document.documentElement.style.setProperty("--accent", c);
+        holder.querySelectorAll("button").forEach(function (x) { x.className = ""; });
+        b.className = "on";
+      };
+      holder.appendChild(b);
+    });
+  } catch (e) {}
+})();
+</script>
+</body>
+</html>
