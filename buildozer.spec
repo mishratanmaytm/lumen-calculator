@@ -1,5 +1,4 @@
 [app]
-p4a.local_recipes = p4a-recipes
 title = Lumen
 package.name = lumen
 package.domain = org.tanmay
@@ -8,6 +7,7 @@ source.include_exts = py,png,wav,json
 source.exclude_dirs = .venv,.git,.github,.buildozer,bin,docs,tests,__pycache__
 version = 1.0
 requirements = python3,kivy==2.3.1
+p4a.branch = develop
 orientation = portrait
 fullscreen = 0
 icon.filename = %(source.dir)s/assets/icon.png
