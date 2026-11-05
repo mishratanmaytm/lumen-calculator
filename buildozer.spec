@@ -1,4 +1,5 @@
 [app]
+p4a.local_recipes = p4a-recipes
 title = Lumen
 package.name = lumen
 package.domain = org.tanmay
